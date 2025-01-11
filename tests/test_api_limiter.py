@@ -43,7 +43,7 @@ def test_check_wait_with_rpm_3_1():
     # Call start and done 2 times (1 second interval)
     for i in range(2):
         limiter.start()
-        limiter.done(time=base_time + timedelta(seconds=i))
+        limiter.done(end_time=base_time + timedelta(seconds=i))
 
     # 3rd check (verify if check_wait returns 0)
     result = limiter.check_wait(base_time + timedelta(seconds=2))
@@ -60,7 +60,7 @@ def test_check_wait_with_rpm_3_2():
     # Call start and done 3 times (1 second interval)
     for i in range(3):
         limiter.start()
-        limiter.done(time=base_time + timedelta(seconds=i))
+        limiter.done(end_time=base_time + timedelta(seconds=i))
 
     # 4th check (verify if check_wait returns 58)
     result = limiter.check_wait(base_time + timedelta(seconds=3))
