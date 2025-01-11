@@ -2,11 +2,17 @@
 name = "api-limit-manager"
 version = "0.1.0"
 description = "Manage API connection limits"
+authors = [{ name = "7shi", email = "7shi@live.jp" }]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "hatchling>=1.27.0",
+]
+
+[dependency-groups]
+dev = [
     "pytest>=8.3.4",
+    "twine>=6.0.1",
 ]
 
 [build-system]
