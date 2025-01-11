@@ -1,0 +1,37 @@
+# API Limit Manager
+
+## Overview
+
+`api-limit-manager` is a Python library designed to help developers manage API request rates and prevent rate limiting errors. It provides a simple and flexible way to control the number of requests made to an API within a specified time interval.
+
+## Features
+
+- Configurable request rate limits
+- Easy-to-use API limiter class
+- Automatic waiting time calculation
+- Supports dynamic rate limit management
+
+## Requirements
+
+- Python 3.10+
+- No external dependencies required
+
+## Usage
+
+```python
+from api_limit_manager import APILimiter
+
+# Create an APILimiter with a rate limit of 60 requests per minute
+limiter = APILimiter(rpm=60)
+
+# Before making an API call, check if you need to wait
+wait_time = limiter.check_wait()
+if wait_time > 0:
+    time.sleep(wait_time)
+
+# Make your API call
+response = make_api_request()
+
+# Mark the request as completed
+limiter.done()
+```
