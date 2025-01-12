@@ -9,7 +9,13 @@ class BackendSQLite:
         Args:
             db_path (str): Path to the SQLite database file
         """
-        self.conn = sqlite3.connect(db_path)
+        self.conn = sqlite3.connect(
+            db_path, 
+            check_same_thread=False
+        )
+        self.conn.execute('PRAGMA journal_mode=WAL')  # Write-Ahead Logging for better concurrency
+        self.conn.execute('PRAGMA synchronous=NORMAL')  # Balance between performance and durability
+        
         cursor = self.conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS api_limit_entries (
@@ -21,8 +27,12 @@ class BackendSQLite:
         self.conn.commit()
 
     def __del__(self):
-        self.conn.close()
-        self.conn = None
+        """
+        Ensure connection is properly closed.
+        """
+        if self.conn:
+            self.conn.close()
+            self.conn = None
 
     def start(self, uid, start_time):
         """
@@ -57,8 +67,10 @@ class BackendSQLite:
             SET end_time = ?
             WHERE uid = ?
         ''', (end_time, uid))
+        
         if cursor.rowcount == 0:
             raise Exception(f"Not found: {uid}")
+        
         self.conn.commit()
 
     def get_time(self, index):
@@ -78,5 +90,5 @@ class BackendSQLite:
             LIMIT 1 OFFSET ?
         ''', (index - 1,))
         result = cursor.fetchone()
-
+        
         return datetime.fromisoformat(result[0]) if result else None

@@ -1,5 +1,3 @@
-import os
-import tempfile
 from datetime import datetime, timedelta
 import pytest
 from api_limit_manager.backend_sqlite import BackendSQLite
