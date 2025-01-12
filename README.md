@@ -41,3 +41,8 @@ response = make_api_request()
 # Mark the request as completed
 limiter.done(request_id)
 ```
+
+## Backends
+
+- `BackendList` is the default backend used by `APILimiter`.
+- `BackendSQLite` is a proof of concept and is not currently in use.
