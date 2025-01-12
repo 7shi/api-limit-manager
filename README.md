@@ -44,5 +44,24 @@ limiter.done(request_id)
 
 ## Backends
 
-- `BackendList` is the default backend used by `APILimiter`.
-- `BackendSQLite` is a proof of concept and is not currently in use.
+The API Limit Manager supports two types of backends for persistence:
+
+- `BackendList`: a simple text file-based backend
+- `BackendSQLite`: an alternative backend using SQLite.
+
+The backend is selected based on the file extension. If the file has a `.db` extension, the `BackendSQLite` is used; otherwise, the `BackendList` is used.
+
+### Backend Selection Example
+
+```python
+from api_limit_manager import APILimiter, get_data_file
+
+# Use default text file backend (without creating an actual file)
+limiter = APILimiter()
+
+# Use a auto-generated text file
+limiter = APILimiter(file_path=get_data_file("my_api.txt"))
+
+# Use a auto-generated SQLite file
+limiter = APILimiter(file_path=get_data_file("my_api.db"))
+```

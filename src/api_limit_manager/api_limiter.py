@@ -1,15 +1,24 @@
-import math, uuid
+import math, uuid, platformdirs
 from datetime import datetime
 from multiprocessing import Lock
 from .backend_list import BackendList
+from .backend_sqlite import BackendSQLite
 
 interval = 60 + 1  # with margin
+
+def get_data_path():
+    appname = __package__.split('.')[0]
+    return platformdirs.user_data_path(appname, False, ensure_exists=True)
+
+def get_data_file(file_name):
+    return str(get_data_path() / file_name)
 
 class APILimiter:
     _global_lock = Lock()
 
     def __init__(self, rpm = None, file_path=None):
-        self.list = BackendList(file_path)
+        backend = BackendSQLite if file_path and str(file_path).endswith(".db") else BackendList
+        self.list = backend(file_path)
         self.rpm = rpm  # requests per minute
 
     def start(self, start_time=None):

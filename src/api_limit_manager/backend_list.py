@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 class BackendList:
@@ -17,7 +18,7 @@ class BackendList:
         """
         Load entries from a file-like object
         """
-        if not self.file_path:
+        if not self.file_path or not os.path.exists(self.file_path):
             return
         with open(self.file_path, "r") as f:
             self.cache = f.read()
@@ -88,7 +89,9 @@ class BackendList:
         Returns:
             datetime or None: End time of the specified entry
         """
+        if index is None:
+            return None
         self._load_entries()
-        if index is None or index > len(self.entries):
+        if index > len(self.entries):
             return None
         return self.entries[-index][2]

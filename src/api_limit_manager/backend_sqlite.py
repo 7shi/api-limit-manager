@@ -103,6 +103,9 @@ class BackendSQLite:
         Returns:
             datetime or None: End time of the entry, or None if no entry exists
         """
+        if index is None:
+            return None
+
         cursor = self.conn.cursor()
         cursor.execute('''
             SELECT end_time FROM api_limit_entries
