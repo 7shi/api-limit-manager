@@ -24,6 +24,15 @@ class BackendSQLite:
                 end_time DATETIME
             )
         ''')
+        
+        # Add indexes
+        cursor.execute('''
+            CREATE INDEX IF NOT EXISTS idx_uid ON api_limit_entries(uid)
+        ''')
+        cursor.execute('''
+            CREATE INDEX IF NOT EXISTS idx_end_time ON api_limit_entries(end_time)
+        ''')
+        
         self.conn.commit()
 
     def __del__(self):
