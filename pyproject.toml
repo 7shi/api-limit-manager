@@ -4,11 +4,14 @@ version = "0.1.0"
 description = "Manage API connection limits"
 authors = [{ name = "7shi", email = "7shi@live.jp" }]
 readme = "README.md"
+license = { text = "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication" }
 requires-python = ">=3.10"
 dependencies = [
-    "hatchling>=1.27.0",
     "platformdirs>=4.3.6",
 ]
+
+[project.urls]
+Repository = "https://github.com/7shi/api-limit-manager"
 
 [dependency-groups]
 dev = [
