@@ -71,6 +71,8 @@ class BackendSQLite:
             Exception: If no entry is found for the given UID
         """
         cursor = self.conn.cursor()
+
+        # Update the entry
         cursor.execute('''
             UPDATE api_limit_entries
             SET end_time = ?
@@ -79,6 +81,13 @@ class BackendSQLite:
 
         if cursor.rowcount == 0:
             raise Exception(f"Not found: {uid}")
+
+        # Remove old entries (entries older than 5 minutes)
+        cutoff_time = end_time - timedelta(minutes=5)
+        cursor.execute('''
+            DELETE FROM api_limit_entries
+            WHERE start_time < ?
+        ''', (cutoff_time,))
 
         self.conn.commit()
 
