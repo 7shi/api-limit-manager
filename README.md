@@ -22,7 +22,7 @@
 from api_limit_manager import APILimiter
 
 # Create an APILimiter with a rate limit of 60 requests per minute
-limiter = APILimiter(rpm=60)
+limiter = APILimiter(rpm=10)
 
 # Start a new API request
 # Retry until a request can be made
