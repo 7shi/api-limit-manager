@@ -24,14 +24,20 @@ from api_limit_manager import APILimiter
 # Create an APILimiter with a rate limit of 60 requests per minute
 limiter = APILimiter(rpm=60)
 
-# Before making an API call, check if you need to wait
-wait_time = limiter.check_wait()
-if wait_time > 0:
+# Start a new API request
+# Retry until a request can be made
+request_id = None
+for _ in range(3):
+    request_id, wait_time = limiter.start()
+    if request_id:
+        break
     time.sleep(wait_time)
+if request_id is None:
+    raise Exception("Could not acquire API request after 3 attempts.")
 
 # Make your API call
 response = make_api_request()
 
 # Mark the request as completed
-limiter.done()
+limiter.done(request_id)
 ```
