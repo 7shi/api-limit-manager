@@ -2,13 +2,15 @@ import sqlite3
 from datetime import datetime, timedelta
 
 class BackendSQLite:
-    def __init__(self, db_path=":memory:"):
+    def __init__(self, db_path=None):
         """
         Initialize SQLite backend.
 
         Args:
             db_path (str): Path to the SQLite database file
         """
+        if not db_path:
+            db_path = ":memory:"
         self.conn = sqlite3.connect(
             db_path,
             check_same_thread=False
