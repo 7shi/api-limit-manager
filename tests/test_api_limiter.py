@@ -7,21 +7,21 @@ def test_start():
     limiter = APILimiter()
 
     # Test start method returns a valid UUID and no wait time
-    uid, wait_time = limiter.start()
-    assert isinstance(uid, str), "start method should return a string"
+    request_id, wait_time = limiter.start()
+    assert isinstance(request_id, str), "start method should return a string"
     assert wait_time is None, "wait time should be None for first request"
-    
+
     # Validate UUID format
     try:
-        uuid.UUID(uid)
+        uuid.UUID(request_id)
     except ValueError:
         assert False, "start method should return a valid UUID string"
 
-    # Test done method with the generated UUID
-    limiter.done()
-    
-    # Test that last_uuid is reset after done
-    assert limiter.last_uuid is None, "last_uuid should be reset after done method"
+    # Test done method with the generated request_id
+    limiter.done(request_id)
+
+    # Test start method returns a valid UUID and no wait time
+    assert True, "Test passed"
 
 def test_start_with_rpm_3_1():
     # Fix the current time
@@ -33,8 +33,8 @@ def test_start_with_rpm_3_1():
     # Call start and done 2 times (1 second interval)
     for i in range(2):
         t = base_time + timedelta(seconds=i)
-        limiter.start(start_time=t)
-        limiter.done(end_time=t)
+        request_id, _ = limiter.start(start_time=t)
+        limiter.done(request_id, end_time=t)
 
     # 3rd check (verify if check_wait returns 0)
     _, result = limiter.start(base_time + timedelta(seconds=i+1))
@@ -51,8 +51,8 @@ def test_start_with_rpm_3_2():
     # Call start and done 3 times (1 second interval)
     for i in range(3):
         t = base_time + timedelta(seconds=i)
-        limiter.start(start_time=t)
-        limiter.done(end_time=t)
+        request_id, _ = limiter.start(start_time=t)
+        limiter.done(request_id, end_time=t)
 
     # 4th check (verify if check_wait returns 58)
     _, result = limiter.start(base_time + timedelta(seconds=i+1))
@@ -63,9 +63,9 @@ def test_done_exception():
     # Initialize APILimiter
     limiter = APILimiter()
 
-    # Test done method without start raises an exception
+    # Test done method without uid raises an exception
     try:
-        limiter.done()
-        assert False, "done method should raise an exception when not started"
+        limiter.done(None)
+        assert False, "done method should raise an exception when no UID is provided"
     except Exception as e:
-        assert str(e) == "Not started.", "Unexpected exception message"
+        assert str(e) == "UID must be provided.", "Unexpected exception message"

@@ -9,6 +9,9 @@ class BackendList:
         self.list.append((uid, start_time, end_time))
 
     def done(self, uid, end_time):
+        if uid is None:
+            raise Exception("UID must be provided.")
+
         found = None
         for i, item in enumerate(self.list):
             if item[0] == uid:

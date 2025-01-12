@@ -11,7 +11,6 @@ class APILimiter:
     def __init__(self, rpm = None):
         self.list = BackendList()
         self.rpm = rpm  # requests per minute
-        self.last_uuid = None
 
     def start(self, start_time=None):
         """
@@ -34,26 +33,20 @@ class APILimiter:
                 if t <= interval:
                     return None, math.ceil((interval - t) * 10) / 10
 
-            self.last_uuid = str(uuid.uuid4())
-            self.list.start(self.last_uuid, start_time)
-            return self.last_uuid, None
+            uid = str(uuid.uuid4())
+            self.list.start(uid, start_time)
+            return uid, None
 
-    def done(self, uid=None, end_time=None):
+    def done(self, uid, end_time=None):
         """
         Complete an API request with global lock to ensure thread/process safety.
 
         Args:
-            uid (str, optional): Unique identifier. Defaults to last started request.
+            uid (str): Unique identifier.
             end_time (datetime, optional): Specific end time. Defaults to current time.
+
+        Raises:
+            Exception: If the UID is invalid.
         """
         with APILimiter._global_lock:
-            if uid is None:
-                uid = self.last_uuid
-                if uid is None:
-                    raise Exception("Not started.")
-
-            if end_time is None:
-                end_time = datetime.now()
-
-            self.list.done(uid, end_time)
-            self.last_uuid = None
+            self.list.done(uid, end_time or datetime.now())

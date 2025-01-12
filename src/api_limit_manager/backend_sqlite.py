@@ -70,6 +70,9 @@ class BackendSQLite:
         Raises:
             Exception: If no entry is found for the given UID
         """
+        if uid is None:
+            raise Exception("UID must be provided.")
+
         cursor = self.conn.cursor()
 
         # Update the entry
