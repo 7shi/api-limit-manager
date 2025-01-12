@@ -27,6 +27,6 @@ class BackendList:
         self.list.insert(index, (uid, start_time, end_time))
 
     def get_time(self, index):
-        if index > len(self.list):
+        if index is None or index > len(self.list):
             return None
         return self.list[-index][2]
