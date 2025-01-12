@@ -48,5 +48,7 @@ class APILimiter:
         Raises:
             Exception: If the UID is invalid.
         """
+        if uid is None:
+            raise Exception("UID must be provided.")
         with APILimiter._global_lock:
             self.list.done(uid, end_time or datetime.now())
