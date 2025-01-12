@@ -8,8 +8,8 @@ interval = 60 + 1  # with margin
 class APILimiter:
     _global_lock = Lock()
 
-    def __init__(self, rpm = None):
-        self.list = BackendList()
+    def __init__(self, rpm = None, file_path=None):
+        self.list = BackendList(file_path)
         self.rpm = rpm  # requests per minute
 
     def start(self, start_time=None):
