@@ -1,8 +1,8 @@
 # API Limit Manager
 
-## Overview
+`api-limit-manager` is a Python library designed to help developers manage API request rates and prevent rate limiting errors. It provides a simple and flexible way to control the number of requests made to an API within a specified time interval, supporting coordination across multiple processes.
 
-`api-limit-manager` is a Python library designed to help developers manage API request rates and prevent rate limiting errors. It provides a simple and flexible way to control the number of requests made to an API within a specified time interval.
+> **Note:** In practice, simply retrying with a short wait (e.g., 15 seconds) when a 429 Too Many Requests response is returned is often simpler and more practical than pre-emptive rate limiting. This library was created as an exploration of the idea but may not be the best approach for most use cases.
 
 ## Features
 
@@ -10,6 +10,7 @@
 - Easy-to-use API limiter class
 - Automatic waiting time calculation
 - Supports dynamic rate limit management
+- Multi-process coordination via `multiprocessing.Lock` and shared backends
 
 ## Requirements
 
